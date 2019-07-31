@@ -60,10 +60,10 @@ namespace ServiceFabricGenericHost
                     scope.ServiceProvider.GetService<ValueHolder<IActorStateProvider>>().Value = null;
                     scope.ServiceProvider.GetService<ValueHolder<ActorServiceSettings>>().Value = null;
 
-                    scope.ServiceProvider.GetService<ValueHolder<Func<ActorService, ActorId, ActorBase>>>().Value = (service, id) =>
+                    scope.ServiceProvider.GetService<ValueHolder<Func<ActorService, ActorId, ActorBase>>>().Value = (actorservice, id) =>
                     {
                         var actorScope = scope.ServiceProvider.CreateScope();
-                        actorScope.ServiceProvider.GetService<ValueHolder<ActorService>>().Value = service;
+                        actorScope.ServiceProvider.GetService<ValueHolder<ActorService>>().Value = actorservice;
                         actorScope.ServiceProvider.GetService<ValueHolder<ActorId>>().Value = id;
                         return (ActorBase)actorScope.ServiceProvider.GetRequiredService(sd.ActorType);
                     };
