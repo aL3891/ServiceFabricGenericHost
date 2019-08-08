@@ -14,8 +14,8 @@ namespace Stateless1
         private static void Main()
         {
             Host.CreateDefaultBuilder()
-                .UseServicefabricHost()
-                .RegisterStatelessService<Stateless1>("Stateless1Type")
+                .UseServicefabric()
+                .RegisterServicefabricService<Stateless1>("Stateless1Type")
                 .Build()
                 .Run();
         }

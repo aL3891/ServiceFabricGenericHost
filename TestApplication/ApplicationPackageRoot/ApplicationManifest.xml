@@ -54,12 +54,12 @@
         <UniformInt64Partition PartitionCount="[DefaultPartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
       </StatefulService>
     </Service>
-    <!--<Service Name="RawStateless">
+    <Service Name="RawStateless">
       <StatelessService ServiceTypeName="RawStatelessType" InstanceCount="[DefaultInstanceCount]">
         <SingletonPartition />
       </StatelessService>
-    </Service>-->
-    <!--<Service Name="Actor1ActorService">
+    </Service>
+    <Service Name="Actor1ActorService">
       <StatefulService ServiceTypeName="Actor1ActorServiceType" TargetReplicaSetSize="[DefaultTargetReplicaSetSize]" MinReplicaSetSize="[DefaultMinReplicaSetSize]">
         <UniformInt64Partition PartitionCount="[DefaultPartitionCount]" LowKey="-9223372036854775808" HighKey="9223372036854775807" />
       </StatefulService>
@@ -83,6 +83,6 @@
       <StatelessService ServiceTypeName="Stateless1Type" InstanceCount="[DefaultInstanceCount]">
         <SingletonPartition />
       </StatelessService>
-    </Service>-->
+    </Service>
   </DefaultServices>
 </ApplicationManifest>

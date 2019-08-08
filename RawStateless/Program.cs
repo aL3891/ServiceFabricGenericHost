@@ -13,10 +13,10 @@ namespace RawStateless
         private static void Main()
         {
             Host.CreateDefaultBuilder()
-            .UseServicefabricHost()
-            .RegisterStatelessService<RawStateless>("RawStatelessType")
-            .Build()
-            .Run();
+                .UseServicefabric()
+                .RegisterServicefabricService<RawStateless>("RawStatelessType")
+                .Build()
+                .Run();
         }
     }
 }

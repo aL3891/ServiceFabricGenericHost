@@ -13,8 +13,8 @@ namespace Web1
         private static void Main()
         {
             Host.CreateDefaultBuilder()
-                .UseServicefabricHost()
-                .RegisterStatelessService<Web1>("Web1Type")
+                .UseServicefabric()
+                .RegisterServicefabricService<Web1>("Web1Type")
                 .Build()
                 .Run();
         }

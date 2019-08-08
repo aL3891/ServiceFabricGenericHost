@@ -13,8 +13,8 @@ namespace RawStateful
         private static void Main()
         {
             Host.CreateDefaultBuilder()
-                .UseServicefabricHost()
-                .RegisterStatefulService<RawStateful>("RawStatefulType")
+                .UseServicefabric()
+                .RegisterServicefabricService<RawStateful>("RawStatefulType")
                 .Build()
                 .Run();
         }

@@ -13,11 +13,10 @@ namespace Web2
         private static void Main()
         {
             Host.CreateDefaultBuilder()
-                .UseServicefabricHost()
-                .RegisterStatefulService<Web2>("Web2Type")
+                .UseServicefabric()
+                .RegisterServicefabricService<Web2>("Web2Type")
                 .Build()
                 .Run();
-
         }
     }
 }

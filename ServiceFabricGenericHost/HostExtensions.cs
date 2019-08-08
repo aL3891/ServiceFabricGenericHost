@@ -11,37 +11,27 @@ namespace ServiceFabricGenericHost
 {
     public static class HostExtensions
     {
-        public static IHostBuilder RegisterStatelessService<TService>(this IHostBuilder hostBuilder, string name) where TService : class
+        public static IHostBuilder RegisterServicefabricService<TService>(this IHostBuilder hostBuilder, string name) where TService : class
         {
             hostBuilder.ConfigureServices((builderContext, services) =>
             {
                 services.AddScoped<TService, TService>();
-                services.AddSingleton(new ServicefabricStatelessServiceDescription { Name = name, ServiceType = typeof(TService) });
+                services.AddSingleton(new ServicefabricServiceDescription { Name = name, ServiceType = typeof(TService) });
             });
             return hostBuilder;
         }
 
-        public static IHostBuilder RegisterStatefulService<TService>(this IHostBuilder hostBuilder, string name) where TService : class
+        public static IHostBuilder RegisterServicefabricActor<TActor, TService>(this IHostBuilder hostBuilder) where TService : class
         {
             hostBuilder.ConfigureServices((builderContext, services) =>
             {
                 services.AddScoped<TService, TService>();
-                services.AddSingleton(new ServicefabricStatefulServiceDescription { Name = name, ServiceType = typeof(TService) });
+                services.AddSingleton(new ServicefabricActorDescription { ServiceType = typeof(TService), ActorType = typeof(TActor) });
             });
             return hostBuilder;
         }
 
-        public static IHostBuilder RegisterActorService<TActor, TService>(this IHostBuilder hostBuilder) where TService : class
-        {
-            hostBuilder.ConfigureServices((builderContext, services) =>
-            {
-                services.AddScoped<TService, TService>();
-                services.AddSingleton(new ServicefabricActorServiceDescription { ServiceType = typeof(TService), ActorType = typeof(TActor) });
-            });
-            return hostBuilder;
-        }
-
-        public static IHostBuilder UseServicefabricHost(this IHostBuilder hostBuilder)
+        public static IHostBuilder UseServicefabric(this IHostBuilder hostBuilder)
         {
             hostBuilder.ConfigureServices((builderContext, services) =>
             {

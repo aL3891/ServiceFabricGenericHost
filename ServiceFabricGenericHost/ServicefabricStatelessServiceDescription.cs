@@ -2,7 +2,7 @@
 
 namespace ServiceFabricGenericHost
 {
-    internal class ServicefabricStatelessServiceDescription
+    internal class ServicefabricServiceDescription
     {
         public string Name { get; set; }
         public Type ServiceType { get; set; }

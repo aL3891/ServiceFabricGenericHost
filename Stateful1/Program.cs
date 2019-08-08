@@ -13,8 +13,8 @@ namespace Stateful1
         private static void Main()
         {
             Host.CreateDefaultBuilder()
-                .UseServicefabricHost()
-                .RegisterStatefulService<Stateful1>("Stateful1Type")
+                .UseServicefabric()
+                .RegisterServicefabricService<Stateful1>("Stateful1Type")
                 .Build()
                 .Run();
         }

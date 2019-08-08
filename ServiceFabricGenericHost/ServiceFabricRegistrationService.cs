@@ -28,7 +28,7 @@ namespace ServiceFabricGenericHost
         {
             var runtime = Services.GetRequiredService<IServiceFabricRuntime>();
 
-            foreach (var sd in Services.GetService<IEnumerable<ServicefabricStatelessServiceDescription>>())
+            foreach (var sd in Services.GetService<IEnumerable<ServicefabricServiceDescription>>())
             {
                 if (typeof(IStatelessServiceInstance).IsAssignableFrom(sd.ServiceType))
                 {
@@ -46,11 +46,7 @@ namespace ServiceFabricGenericHost
                         return (StatelessService)service;
                     }, default, cancellationToken);
                 }
-            }
-
-            foreach (var sd in Services.GetService<IEnumerable<ServicefabricStatefulServiceDescription>>())
-            {
-                if (typeof(IStatefulServiceReplica).IsAssignableFrom(sd.ServiceType))
+                else if (typeof(IStatefulServiceReplica).IsAssignableFrom(sd.ServiceType))
                 {
                     var factory = Services.GetRequiredService<GenericHostStatefulServiceFactory>();
                     factory.ServiceType = sd.ServiceType;
@@ -68,7 +64,7 @@ namespace ServiceFabricGenericHost
                 }
             }
 
-            foreach (var sd in Services.GetService<IEnumerable<ServicefabricActorServiceDescription>>())
+            foreach (var sd in Services.GetService<IEnumerable<ServicefabricActorDescription>>())
             {
                 await runtime.RegisterActorServiceAsync(sd.ActorType, (context, actorTypeInfo) =>
                 {
