@@ -1,13 +1,12 @@
 using System;
 using System.Diagnostics;
-using System.Fabric;
 using System.Threading;
 using System.Threading.Tasks;
-using ServiceFabricGenericHost;
 using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.Services.Runtime;
+using ServiceFabricGenericHost;
 
-namespace Stateless1
+namespace RawStateful
 {
     internal static class Program
     {
@@ -15,7 +14,7 @@ namespace Stateless1
         {
             Host.CreateDefaultBuilder()
                 .UseServicefabricHost()
-                .RegisterStatelessService<Stateless1>("Stateless1Type")
+                .RegisterStatefulService<RawStateful>("RawStatefulType")
                 .Build()
                 .Run();
         }

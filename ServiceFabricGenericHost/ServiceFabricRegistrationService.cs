@@ -30,24 +30,42 @@ namespace ServiceFabricGenericHost
 
             foreach (var sd in Services.GetService<IEnumerable<ServicefabricStatelessServiceDescription>>())
             {
-                await runtime.RegisterStatelessServiceAsync(sd.Name, context =>
+                if (typeof(IStatelessServiceInstance).IsAssignableFrom(sd.ServiceType))
                 {
-                    var scope = Services.CreateScope();
-                    scope.ServiceProvider.GetService<ValueHolder<StatelessServiceContext>>().Value = context;
-                    var service = scope.ServiceProvider.GetRequiredService(sd.ServiceType);
-                    return (StatelessService)service;
-                }, default, cancellationToken);
+                    var factory = Services.GetRequiredService<GenericHostStatelessServiceFactory>();
+                    factory.ServiceType = sd.ServiceType;
+                    await runtime.RegisterStatelessServiceAsync(sd.Name, factory, default, cancellationToken);
+                }
+                else if (typeof(StatelessService).IsAssignableFrom(sd.ServiceType))
+                {
+                    await runtime.RegisterStatelessServiceAsync(sd.Name, context =>
+                    {
+                        var scope = Services.CreateScope();
+                        scope.ServiceProvider.GetService<ValueHolder<StatelessServiceContext>>().Value = context;
+                        var service = scope.ServiceProvider.GetRequiredService(sd.ServiceType);
+                        return (StatelessService)service;
+                    }, default, cancellationToken);
+                }
             }
 
             foreach (var sd in Services.GetService<IEnumerable<ServicefabricStatefulServiceDescription>>())
             {
-                await runtime.RegisterStatefulServiceAsync(sd.Name, context =>
+                if (typeof(IStatefulServiceReplica).IsAssignableFrom(sd.ServiceType))
                 {
-                    var scope = Services.CreateScope();
-                    scope.ServiceProvider.GetService<ValueHolder<StatefulServiceContext>>().Value = context;
-                    var service = scope.ServiceProvider.GetRequiredService(sd.ServiceType);
-                    return (StatefulService)service;
-                }, default, cancellationToken);
+                    var factory = Services.GetRequiredService<GenericHostStatefulServiceFactory>();
+                    factory.ServiceType = sd.ServiceType;
+                    await runtime.RegisterStatefulServiceAsync(sd.Name, factory, default, cancellationToken);
+                }
+                else if (typeof(StatefulService).IsAssignableFrom(sd.ServiceType))
+                {
+                    await runtime.RegisterStatefulServiceAsync(sd.Name, context =>
+                    {
+                        var scope = Services.CreateScope();
+                        scope.ServiceProvider.GetService<ValueHolder<StatefulServiceContext>>().Value = context;
+                        var service = scope.ServiceProvider.GetRequiredService(sd.ServiceType);
+                        return (StatefulService)service;
+                    }, default, cancellationToken);
+                }
             }
 
             foreach (var sd in Services.GetService<IEnumerable<ServicefabricActorServiceDescription>>())

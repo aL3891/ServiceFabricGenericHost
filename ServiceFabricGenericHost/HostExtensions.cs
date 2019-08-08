@@ -5,6 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.ServiceFabric.Data;
 
 namespace ServiceFabricGenericHost
 {
@@ -46,6 +47,11 @@ namespace ServiceFabricGenericHost
             {
                 services.AddHostedService<ServiceFabricRegistrationService>();
 
+                services.AddSingleton(s => FabricRuntime.Create());
+                services.AddSingleton<IServiceFabricRuntime, ServiceFabricServiceRuntime>();
+                services.AddTransient<GenericHostStatefulServiceFactory, GenericHostStatefulServiceFactory>();
+                services.AddTransient<GenericHostStatelessServiceFactory, GenericHostStatelessServiceFactory>();
+
                 services.AddSingleton<IServiceFabricRuntime, ServiceFabricServiceRuntime>();
                 services.AddScoped<ValueHolder<StatelessServiceContext>, ValueHolder<StatelessServiceContext>>();
                 services.AddScoped<ValueHolder<StatefulServiceContext>, ValueHolder<StatefulServiceContext>>();
@@ -57,6 +63,9 @@ namespace ServiceFabricGenericHost
                 services.AddScoped<ValueHolder<ActorId>, ValueHolder<ActorId>>();
                 services.AddScoped<ValueHolder<Func<ActorService, ActorId, ActorBase>>>();
 
+                services.AddScoped<ReliableStateManager, ReliableStateManager>();
+                services.AddScoped<IReliableStateManager>(sp => sp.GetRequiredService<ReliableStateManager>());
+                services.AddScoped<IStateProviderReplica>(sp => sp.GetRequiredService<ReliableStateManager>());
 
                 services.AddTransient(sp => sp.GetRequiredService<ValueHolder<StatelessServiceContext>>().Value);
                 services.AddTransient(sp => sp.GetRequiredService<ValueHolder<StatefulServiceContext>>().Value);

@@ -11,6 +11,9 @@ namespace ServiceFabricGenericHost
     {
         Task RegisterStatelessServiceAsync(string serviceTypeName, Func<StatelessServiceContext, StatelessService> serviceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
         Task RegisterStatefulServiceAsync(string serviceTypeName, Func<StatefulServiceContext, StatefulServiceBase> serviceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
+        Task RegisterStatefulServiceAsync(string serviceTypeName, IStatefulServiceFactory serviceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
+        Task RegisterStatelessServiceAsync(string serviceTypeName, IStatelessServiceFactory serviceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
+
         Task RegisterActorServiceAsync(Type actorType, Func<StatefulServiceContext, ActorTypeInformation, ActorService> actorServiceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
     }
 }

@@ -19,6 +19,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Web2", "Web2\Web2.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ServiceFabricGenericHost", "ServiceFabricGenericHost\ServiceFabricGenericHost.csproj", "{8BB8B1F5-4EEB-419C-B057-5452F210BA1B}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawStateless", "RawStateless\RawStateless.csproj", "{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RawStateful", "RawStateful\RawStateful.csproj", "{390E0ACD-95D7-4B0D-885D-19F306ABB05B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +95,22 @@ Global
 		{8BB8B1F5-4EEB-419C-B057-5452F210BA1B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8BB8B1F5-4EEB-419C-B057-5452F210BA1B}.Release|x64.ActiveCfg = Release|Any CPU
 		{8BB8B1F5-4EEB-419C-B057-5452F210BA1B}.Release|x64.Build.0 = Release|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Debug|x64.Build.0 = Debug|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Release|x64.ActiveCfg = Release|Any CPU
+		{ECC07F37-8006-4DBF-BEDD-37804AA1B57D}.Release|x64.Build.0 = Release|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Debug|x64.Build.0 = Debug|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Release|x64.ActiveCfg = Release|Any CPU
+		{390E0ACD-95D7-4B0D-885D-19F306ABB05B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

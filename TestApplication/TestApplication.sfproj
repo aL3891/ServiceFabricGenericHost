@@ -30,6 +30,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Actor1\Actor1.csproj" />
+    <ProjectReference Include="..\RawStateful\RawStateful.csproj" />
+    <ProjectReference Include="..\RawStateless\RawStateless.csproj" />
     <ProjectReference Include="..\Stateful1\Stateful1.csproj" />
     <ProjectReference Include="..\Stateless1\Stateless1.csproj" />
     <ProjectReference Include="..\Web1\Web1.csproj">
