@@ -4,19 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.ServiceFabric.Actors;
 using Microsoft.ServiceFabric.Actors.Runtime;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.ServiceFabric.Data;
 using System.Collections.Generic;
-
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using System.Fabric.Description;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Hosting;
 
 namespace ServiceFabricGenericHost
