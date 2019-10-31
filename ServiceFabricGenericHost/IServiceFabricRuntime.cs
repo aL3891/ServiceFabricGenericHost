@@ -15,5 +15,8 @@ namespace ServiceFabricGenericHost
         Task RegisterStatelessServiceAsync(string serviceTypeName, IStatelessServiceFactory serviceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
 
         Task RegisterActorServiceAsync(Type actorType, Func<StatefulServiceContext, ActorTypeInformation, ActorService> actorServiceFactory, TimeSpan timeout = default, CancellationToken cancellationToken = default);
+        NodeContext GetNodeContext();
+        ICodePackageActivationContext GetActivationContext();
     }
+
 }
