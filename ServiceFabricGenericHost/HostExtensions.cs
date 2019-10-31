@@ -150,7 +150,7 @@ namespace ServiceFabricGenericHost
 
         public void Abort()
         {
-            Host.StopAsync();
+            Host?.StopAsync();
         }
 
         public GenericHostCommunicationListener( EndpointResourceDescription ep, IHostBuilder host )
