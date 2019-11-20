@@ -12,6 +12,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using System.Net.NetworkInformation;
+using System.Net.Sockets;
+using System.Net;
 
 namespace ServiceFabricGenericHost
 {
@@ -90,18 +93,18 @@ namespace ServiceFabricGenericHost
             return new ServiceInstanceListener( serviceContext => new GenericHostCommunicationListener( endpoint, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), endpoint.Name );
         }
 
-        public static IEnumerable<ServiceInstanceListener> ToListeners( this IHostBuilder builder, IEnumerable<EndpointResourceDescription> endpoint )
+        public static IEnumerable<ServiceInstanceListener> ToListeners( this IHostBuilder builder, NodeContext nodeContext, IEnumerable<EndpointResourceDescription> endpoint )
         {
             bool first = true;
             foreach( var ep in endpoint )
             {
                 if( first )
                 {
-                    yield return new ServiceInstanceListener( serviceContext => new GenericHostCommunicationListener( ep, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), ep.Name );
+                    yield return new ServiceInstanceListener( serviceContext => new GenericHostCommunicationListener( ep, nodeContext, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), ep.Name );
                     first = false;
                 }
                 else
-                    yield return new ServiceInstanceListener( serviceContext => new FakeCommunicationListener( $"{ep.Protocol}://+:{ep.Port}" ), ep.Name );
+                    yield return new ServiceInstanceListener( serviceContext => new FakeCommunicationListener( $"{ep.Protocol}://{nodeContext.IPAddressOrFQDN}:{ep.Port}" ), ep.Name );
             }
         }
     }
@@ -134,13 +137,14 @@ namespace ServiceFabricGenericHost
     public class GenericHostCommunicationListener : ICommunicationListener
     {
         public EndpointResourceDescription Ep { get; }
+        public NodeContext NodeContext { get; }
         public IHostBuilder HostBuilder { get; }
         public IHost Host { get; private set; }
 
         public async Task<string> OpenAsync( CancellationToken cancellationToken )
         {
             Host = await HostBuilder.StartAsync( cancellationToken );
-            return $"{Ep.Protocol}://+:{Ep.Port}";
+            return $"{Ep.Protocol}://{NodeContext.IPAddressOrFQDN}:{Ep.Port}";
         }
 
         public async Task CloseAsync( CancellationToken cancellationToken )
@@ -153,9 +157,10 @@ namespace ServiceFabricGenericHost
             Host?.StopAsync();
         }
 
-        public GenericHostCommunicationListener( EndpointResourceDescription ep, IHostBuilder host )
+        public GenericHostCommunicationListener( EndpointResourceDescription ep, NodeContext nodeContext, IHostBuilder host )
         {
             Ep = ep;
+            NodeContext = nodeContext;
             HostBuilder = host;
         }
     }
