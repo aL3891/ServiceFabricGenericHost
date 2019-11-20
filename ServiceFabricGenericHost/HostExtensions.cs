@@ -88,9 +88,9 @@ namespace ServiceFabricGenericHost
             return builder.UseUrls( $"{endpoint.Protocol}://+:{endpoint.Port}" );
         }
 
-        public static ServiceInstanceListener ToListener( this IHostBuilder builder, EndpointResourceDescription endpoint )
+        public static ServiceInstanceListener ToListener( this IHostBuilder builder, NodeContext nodeContext, EndpointResourceDescription endpoint )
         {
-            return new ServiceInstanceListener( serviceContext => new GenericHostCommunicationListener( endpoint, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), endpoint.Name );
+            return new ServiceInstanceListener( serviceContext => new GenericHostCommunicationListener( endpoint, nodeContext, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), endpoint.Name );
         }
 
         public static IEnumerable<ServiceInstanceListener> ToListeners( this IHostBuilder builder, NodeContext nodeContext, IEnumerable<EndpointResourceDescription> endpoint )
