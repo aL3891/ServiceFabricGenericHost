@@ -5,8 +5,8 @@
   </PropertyGroup>
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.ServiceFabric" Version="6.5.677" />
-    <PackageReference Include="Microsoft.ServiceFabric.Actors" Version="3.4.677" />
-    <PackageReference Include="Microsoft.ServiceFabric.Services" Version="3.4.677" />
+    <PackageReference Include="Microsoft.ServiceFabric" Version="7.0.457" />
+    <PackageReference Include="Microsoft.ServiceFabric.Actors" Version="4.0.457" />
+    <PackageReference Include="Microsoft.ServiceFabric.Services" Version="4.0.457" />
   </ItemGroup>
 </Project>
