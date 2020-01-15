@@ -88,12 +88,12 @@ namespace ServiceFabricGenericHost
             return builder.UseUrls( $"{endpoint.Protocol}://+:{endpoint.Port}" );
         }
 
-        public static ServiceInstanceListener ToListener( this IHostBuilder builder, NodeContext nodeContext, EndpointResourceDescription endpoint )
+        public static ServiceInstanceListener ToInstanceListener( this IHostBuilder builder, NodeContext nodeContext, EndpointResourceDescription endpoint )
         {
             return new ServiceInstanceListener( serviceContext => new GenericHostCommunicationListener( endpoint, nodeContext, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), endpoint.Name );
         }
 
-        public static IEnumerable<ServiceInstanceListener> ToListeners( this IHostBuilder builder, NodeContext nodeContext, IEnumerable<EndpointResourceDescription> endpoint )
+        public static IEnumerable<ServiceInstanceListener> ToInstanceListeners( this IHostBuilder builder, NodeContext nodeContext, IEnumerable<EndpointResourceDescription> endpoint )
         {
             bool first = true;
             foreach( var ep in endpoint )
@@ -105,6 +105,26 @@ namespace ServiceFabricGenericHost
                 }
                 else
                     yield return new ServiceInstanceListener( serviceContext => new FakeCommunicationListener( $"{ep.Protocol}://{nodeContext.IPAddressOrFQDN}:{ep.Port}" ), ep.Name );
+            }
+        }
+
+        public static ServiceReplicaListener ToReplicaListener( this IHostBuilder builder, NodeContext nodeContext, EndpointResourceDescription endpoint )
+        {
+            return new ServiceReplicaListener( serviceContext => new GenericHostCommunicationListener( endpoint, nodeContext, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), endpoint.Name );
+        }
+
+        public static IEnumerable<ServiceReplicaListener> ToReplicaListeners( this IHostBuilder builder, NodeContext nodeContext, IEnumerable<EndpointResourceDescription> endpoint )
+        {
+            bool first = true;
+            foreach( var ep in endpoint )
+            {
+                if( first )
+                {
+                    yield return new ServiceReplicaListener( serviceContext => new GenericHostCommunicationListener( ep, nodeContext, builder.ConfigureServices( services => services.AddSingleton( serviceContext ) ) ), ep.Name );
+                    first = false;
+                }
+                else
+                    yield return new ServiceReplicaListener( serviceContext => new FakeCommunicationListener( $"{ep.Protocol}://{nodeContext.IPAddressOrFQDN}:{ep.Port}" ), ep.Name );
             }
         }
     }
