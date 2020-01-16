@@ -20,60 +20,60 @@ namespace ServiceFabricGenericHost
 {
     public static class HostExtensions
     {
-        public static IHostBuilder RegisterServicefabricService<TService>(this IHostBuilder hostBuilder, string name) where TService : class
+        public static IHostBuilder RegisterServicefabricService<TService>( this IHostBuilder hostBuilder, string name ) where TService : class
         {
-            hostBuilder.ConfigureServices((builderContext, services) =>
-            {
-                services.AddScoped<TService, TService>();
-                services.AddSingleton(new ServicefabricServiceDescription { Name = name, ServiceType = typeof(TService) });
-            });
+            hostBuilder.ConfigureServices( ( builderContext, services ) =>
+             {
+                 services.AddScoped<TService, TService>();
+                 services.AddSingleton( new ServicefabricServiceDescription { Name = name, ServiceType = typeof( TService ) } );
+             } );
             return hostBuilder;
         }
 
-        public static IHostBuilder RegisterServicefabricActor<TActor, TService>(this IHostBuilder hostBuilder) where TService : class
+        public static IHostBuilder RegisterServicefabricActor<TActor, TService>( this IHostBuilder hostBuilder ) where TService : class
         {
-            hostBuilder.ConfigureServices((builderContext, services) =>
-            {
-                services.AddScoped<TService, TService>();
-                services.AddSingleton(new ServicefabricActorDescription { ServiceType = typeof(TService), ActorType = typeof(TActor) });
-            });
+            hostBuilder.ConfigureServices( ( builderContext, services ) =>
+             {
+                 services.AddScoped<TService, TService>();
+                 services.AddSingleton( new ServicefabricActorDescription { ServiceType = typeof( TService ), ActorType = typeof( TActor ) } );
+             } );
             return hostBuilder;
         }
 
-        public static IHostBuilder UseServicefabric(this IHostBuilder hostBuilder)
+        public static IHostBuilder UseServicefabric( this IHostBuilder hostBuilder )
         {
-            hostBuilder.ConfigureServices((builderContext, services) =>
-            {
-                services.AddHostedService<ServiceFabricRegistrationService>();
+            hostBuilder.ConfigureServices( ( builderContext, services ) =>
+             {
+                 services.AddHostedService<ServiceFabricRegistrationService>();
 
-                services.AddSingleton<IServiceFabricRuntime, ServiceFabricServiceRuntime>();
-                services.AddTransient<GenericHostServiceFactory, GenericHostServiceFactory>();
+                 services.AddSingleton<IServiceFabricRuntime, ServiceFabricServiceRuntime>();
+                 services.AddTransient<GenericHostServiceFactory, GenericHostServiceFactory>();
 
-                services.AddScoped<ValueHolder<StatelessServiceContext>, ValueHolder<StatelessServiceContext>>();
-                services.AddScoped<ValueHolder<StatefulServiceContext>, ValueHolder<StatefulServiceContext>>();
-                services.AddScoped<ValueHolder<ActorTypeInformation>, ValueHolder<ActorTypeInformation>>();
+                 services.AddScoped<ValueHolder<StatelessServiceContext>, ValueHolder<StatelessServiceContext>>();
+                 services.AddScoped<ValueHolder<StatefulServiceContext>, ValueHolder<StatefulServiceContext>>();
+                 services.AddScoped<ValueHolder<ActorTypeInformation>, ValueHolder<ActorTypeInformation>>();
 
-                services.AddScoped<ValueHolder<IActorStateProvider>, ValueHolder<IActorStateProvider>>();
-                services.AddScoped<ValueHolder<ActorServiceSettings>, ValueHolder<ActorServiceSettings>>();
-                services.AddScoped<ValueHolder<ActorService>, ValueHolder<ActorService>>();
-                services.AddScoped<ValueHolder<ActorId>, ValueHolder<ActorId>>();
-                services.AddScoped<ValueHolder<Func<ActorService, ActorId, ActorBase>>>();
+                 services.AddScoped<ValueHolder<IActorStateProvider>, ValueHolder<IActorStateProvider>>();
+                 services.AddScoped<ValueHolder<ActorServiceSettings>, ValueHolder<ActorServiceSettings>>();
+                 services.AddScoped<ValueHolder<ActorService>, ValueHolder<ActorService>>();
+                 services.AddScoped<ValueHolder<ActorId>, ValueHolder<ActorId>>();
+                 services.AddScoped<ValueHolder<Func<ActorService, ActorId, ActorBase>>>();
 
-                services.AddScoped<ReliableStateManager, ReliableStateManager>();
-                services.AddScoped<IReliableStateManager>(sp => sp.GetRequiredService<ReliableStateManager>());
-                services.AddScoped<IStateProviderReplica>(sp => sp.GetRequiredService<ReliableStateManager>());
+                 services.AddScoped<ReliableStateManager, ReliableStateManager>();
+                 services.AddScoped<IReliableStateManager>( sp => sp.GetRequiredService<ReliableStateManager>() );
+                 services.AddScoped<IStateProviderReplica>( sp => sp.GetRequiredService<ReliableStateManager>() );
 
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<StatelessServiceContext>>().Value);
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<StatefulServiceContext>>().Value);
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<ActorTypeInformation>>().Value);
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<StatelessServiceContext>>().Value );
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<StatefulServiceContext>>().Value );
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<ActorTypeInformation>>().Value );
 
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<IActorStateProvider>>().Value);
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<ActorServiceSettings>>().Value);
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<ActorService>>().Value);
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<ActorId>>().Value);
-                services.AddTransient(sp => sp.GetRequiredService<ValueHolder<Func<ActorService, ActorId, ActorBase>>>().Value);
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<IActorStateProvider>>().Value );
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<ActorServiceSettings>>().Value );
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<ActorService>>().Value );
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<ActorId>>().Value );
+                 services.AddTransient( sp => sp.GetRequiredService<ValueHolder<Func<ActorService, ActorId, ActorBase>>>().Value );
 
-            });
+             } );
 
             return hostBuilder;
         }
@@ -145,6 +145,70 @@ namespace ServiceFabricGenericHost
                  .UseEndPoints( ep ) )
                  .ToReplicaListener( serviceContext.NodeContext, ep );
         }
+
+        public static ServiceInstanceListener HttpAspnetListener<TStartup>( this StatelessServiceContext serviceContext, string endpointName = "GrpcEndpoint" ) where TStartup : class
+        {
+            var ep = serviceContext.CodePackageActivationContext.GetEndpoint( endpointName );
+            return Host.CreateDefaultBuilder()
+                 .ConfigureWebHostDefaults( webhost => webhost
+                 .UseKestrel( options =>
+                 {
+                     options.Listen( IPAddress.Any, ep.Port, listenoptions => { listenoptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2; } );
+                     options.AllowSynchronousIO = true;
+                 } )
+                 .UseStartup<TStartup>()
+                 .UseEndPoints( ep ) )
+                 .ToInstanceListener( serviceContext.NodeContext, ep );
+        }
+    }
+
+
+    public class AspnetStatefulService<TStartup> : Microsoft.ServiceFabric.Services.Runtime.StatefulService where TStartup : class
+    {
+        public AspnetStatefulService( StatefulServiceContext serviceContext ) : base( serviceContext ) { }
+
+        public virtual IWebHostBuilder Configure( IWebHostBuilder webhost, EndpointResourceDescription ep ) => webhost.UseKestrel();
+
+        protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
+        {
+            var ep = Context.CodePackageActivationContext.GetEndpoint( "GrpcEndpoint" );
+            var l = Host.CreateDefaultBuilder()
+                 .ConfigureWebHostDefaults( webhost => Configure( webhost, ep ).UseStartup<TStartup>().UseEndPoints( ep ) )
+                 .ToReplicaListener( Context.NodeContext, ep );
+            return new ServiceReplicaListener[] { l };
+        }
+    }
+
+    public class HttpGrpcStatefulService<TStartup> : AspnetStatefulService<TStartup> where TStartup : class
+    {
+        public HttpGrpcStatefulService( StatefulServiceContext serviceContext ) : base( serviceContext ) { }
+
+        public override IWebHostBuilder Configure( IWebHostBuilder webhost, EndpointResourceDescription ep ) =>
+            webhost.UseKestrel( options => options.Listen( IPAddress.Any, ep.Port, listenoptions => { listenoptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2; } ) );
+    }
+
+    public class AspnetStatelessService<TStartup> : Microsoft.ServiceFabric.Services.Runtime.StatelessService where TStartup : class
+    {
+        public AspnetStatelessService( StatelessServiceContext serviceContext ) : base( serviceContext ) { }
+
+        public virtual IWebHostBuilder Configure( IWebHostBuilder webhost, EndpointResourceDescription ep ) => webhost.UseKestrel();
+
+        protected override IEnumerable<ServiceInstanceListener> CreateServiceInstanceListeners()
+        {
+            var ep = Context.CodePackageActivationContext.GetEndpoint( "GrpcEndpoint" );
+            var l = Host.CreateDefaultBuilder()
+                 .ConfigureWebHostDefaults( webhost => Configure( webhost, ep ).UseStartup<TStartup>().UseEndPoints( ep ) )
+                 .ToInstanceListener( Context.NodeContext, ep );
+            return new ServiceInstanceListener[] { l };
+        }
+    }
+
+    public class HttpGrpcStatelessService<TStartup> : AspnetStatelessService<TStartup> where TStartup : class
+    {
+        public HttpGrpcStatelessService( StatelessServiceContext serviceContext ) : base( serviceContext ) { }
+
+        public override IWebHostBuilder Configure( IWebHostBuilder webhost, EndpointResourceDescription ep ) =>
+            webhost.UseKestrel( options => options.Listen( IPAddress.Any, ep.Port, listenoptions => { listenoptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2; } ) );
     }
 
     public class FakeCommunicationListener : ICommunicationListener
