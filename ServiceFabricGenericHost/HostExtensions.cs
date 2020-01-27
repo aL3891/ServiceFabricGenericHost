@@ -184,7 +184,7 @@ namespace ServiceFabricGenericHost
         public HttpGrpcStatefulService( StatefulServiceContext serviceContext ) : base( serviceContext ) { }
 
         public override IWebHostBuilder Configure( IWebHostBuilder webhost, EndpointResourceDescription ep ) =>
-            webhost.UseKestrel( options => options.Listen( IPAddress.Any, ep.Port, listenoptions => { listenoptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2; } ) );
+            webhost.UseKestrel( options => options.Listen( IPAddress.Parse("0.0.0.0"), ep.Port, listenoptions => { listenoptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2; } ) );
     }
 
     public class AspnetStatelessService<TStartup> : Microsoft.ServiceFabric.Services.Runtime.StatelessService where TStartup : class
