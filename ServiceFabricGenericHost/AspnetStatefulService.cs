@@ -13,10 +13,12 @@ namespace ServiceFabricGenericHost
 
         public virtual IWebHostBuilder Configure( IWebHostBuilder webhost, EndpointResourceDescription ep ) => webhost.UseKestrel();
 
+        public virtual IHostBuilder Configure( IHostBuilder hostBuilder ) => hostBuilder;
+
         protected override IEnumerable<ServiceReplicaListener> CreateServiceReplicaListeners()
         {
             var l = HostExtensions.ToReplicaListener( ep =>
-            Host.CreateDefaultBuilder().ConfigureWebHostDefaults( webhost => Configure( webhost, ep ).UseStartup<TStartup>().UseEndPoints( ep ) ), Context.NodeContext, Context.CodePackageActivationContext.GetEndpoint( "GrpcEndpoint" ) );
+            Configure( Host.CreateDefaultBuilder().ConfigureWebHostDefaults( webhost => Configure( webhost, ep ).UseStartup<TStartup>().UseEndPoints( ep ) ) ), Context.NodeContext, Context.CodePackageActivationContext.GetEndpoint( "GrpcEndpoint" ) );
             return new ServiceReplicaListener[] { l };
         }
     }
